@@ -1,0 +1,353 @@
+/* ===================================================================
+   DESIGN TOKENS
+   A critical-edition / manuscript register: parchment ground, iron-gall
+   ink text, rubricated red for corrections (echoing real scribal
+   practice), verdigris green for classification, and gold for accents.
+   =================================================================== */
+:root {
+    --ink: #221b14;
+    --ink-soft: #6b5f4c;
+    --ink-faint: #9c9280;
+
+    --parchment: #f1e6cf;
+    --parchment-raised: #faf5e7;
+    --parchment-sunken: #e8dabb;
+
+    --rubric: #9a3324;
+    --rubric-soft: #f4e3dc;
+    --rubric-line: #d9c3a8;
+
+    --verdigris: #2f5d50;
+    --verdigris-soft: #e4ece8;
+
+    --gold: #a9822f;
+    --gold-soft: #f1e2b8;
+
+    --border: #ddd0b0;
+    --border-strong: #c9b98e;
+
+    --shadow-color: 34 27 20;
+
+    --font-display: 'Fraunces', 'Georgia', serif;
+    --font-body: 'Lora', 'Georgia', serif;
+    --font-arabic: 'Amiri', serif;
+    --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+
+.dark {
+    --ink: #e9dec2;
+    --ink-soft: #b7a98a;
+    --ink-faint: #7d735c;
+
+    --parchment: #171310;
+    --parchment-raised: #201a15;
+    --parchment-sunken: #100d0a;
+
+    --rubric: #d98467;
+    --rubric-soft: #33201a;
+    --rubric-line: #4a3626;
+
+    --verdigris: #7fb8a4;
+    --verdigris-soft: #1b2b26;
+
+    --gold: #cba75a;
+    --gold-soft: #2e2515;
+
+    --border: #382e22;
+    --border-strong: #4a3d2c;
+
+    --shadow-color: 0 0 0;
+}
+
+/* ===================================================================
+   BASE
+   =================================================================== */
+body {
+    font-family: var(--font-body);
+    background-color: var(--parchment);
+    color: var(--ink);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+    background-color: var(--gold-soft);
+    color: var(--ink);
+}
+
+*:focus-visible {
+    outline: 2px solid var(--rubric);
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        transition-duration: 0.001ms !important;
+    }
+}
+
+/* ===================================================================
+   PRIMITIVES
+   =================================================================== */
+.font-display { font-family: var(--font-display); }
+.font-mono-app { font-family: var(--font-mono); }
+.font-arabic { font-family: var(--font-arabic); }
+
+.rule-double {
+    height: 5px;
+    background-image: repeating-linear-gradient(
+        to bottom,
+        var(--gold) 0px, var(--gold) 1px,
+        transparent 1px, transparent 3px,
+        var(--gold) 3px, var(--gold) 4px,
+        transparent 4px, transparent 5px
+    );
+    opacity: 0.55;
+}
+
+/* ===================================================================
+   BREADCRUMBS
+   =================================================================== */
+.breadcrumb-link {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--verdigris);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--border-strong);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+.breadcrumb-link:hover { color: var(--rubric); }
+
+.breadcrumb-current {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    font-weight: 600;
+}
+
+.breadcrumb-sep {
+    color: var(--ink-faint);
+    margin: 0 7px;
+    font-size: 11px;
+}
+
+/* ===================================================================
+   NAV CARD (collection / chapter browsing rows)
+   =================================================================== */
+.nav-card {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    text-align: left;
+    padding: 16px 20px;
+    background-color: var(--parchment-raised);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    transition: border-color 0.15s ease, transform 0.1s ease;
+    animation: folio-in 0.3s ease both;
+}
+.nav-card:hover { border-color: var(--border-strong); }
+.nav-card:active { transform: scale(0.995); }
+
+.nav-card-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--ink);
+}
+
+.nav-card-meta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-soft);
+}
+
+.nav-card-chevron {
+    font-family: var(--font-mono);
+    color: var(--gold);
+    font-size: 14px;
+}
+
+/* ===================================================================
+   FOLIO CARD (each hadith entry)
+   =================================================================== */
+.folio {
+    background-color: var(--parchment-raised);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    animation: folio-in 0.35s ease both;
+}
+
+@keyframes folio-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.folio-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 14px 20px;
+    background-color: var(--parchment-sunken);
+    border-bottom: 1px solid var(--border);
+}
+
+.folio-ref {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.03em;
+    color: var(--verdigris);
+    font-weight: 600;
+}
+
+.folio-body {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 24px;
+}
+
+@media (min-width: 1024px) {
+    .folio-body {
+        grid-template-columns: 1fr 1px 1fr;
+        align-items: start;
+    }
+    .folio-divider {
+        background-color: var(--border);
+        align-self: stretch;
+    }
+}
+
+.folio-english {
+    font-family: var(--font-body);
+    font-size: 15.5px;
+    line-height: 1.85;
+    color: var(--ink);
+}
+
+.folio-arabic {
+    font-family: var(--font-arabic);
+    direction: rtl;
+    text-align: right;
+    font-size: 1.9rem;
+    line-height: 2.5;
+    color: var(--ink);
+}
+
+.folio-utility {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    padding: 4px 20px 16px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-soft);
+}
+
+/* Accordion rows */
+.accordion-trigger {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 20px;
+    border-top: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    background: transparent;
+    text-align: left;
+}
+.accordion-trigger:hover { background-color: var(--parchment-sunken); }
+
+.accordion-chevron {
+    display: inline-block;
+    transition: transform 0.2s ease;
+    font-size: 11px;
+}
+.accordion-chevron.is-open { transform: rotate(180deg); }
+
+.accordion-panel {
+    border-top: 1px dashed var(--border-strong);
+    padding: 4px 20px 20px;
+}
+
+/* ===================================================================
+   ERRATA SLIP (misquote / radd correction) — signature element.
+   Styled like a correction slip pasted into a manuscript margin:
+   rubricated ink, a faint rotation, a torn/deckle top edge.
+   =================================================================== */
+.errata-slip {
+    position: relative;
+    background-color: var(--parchment-raised);
+    border: 1px solid var(--rubric-line);
+    border-radius: 3px;
+    transform: rotate(-0.35deg);
+    box-shadow: 0 1px 0 rgba(var(--shadow-color) / 0.05);
+}
+.errata-slip:nth-of-type(even) { transform: rotate(0.35deg); }
+
+.errata-row {
+    display: flex;
+    gap: 10px;
+    padding: 11px 14px;
+    font-size: 13px;
+    line-height: 1.6;
+}
+.errata-row + .errata-row {
+    border-top: 1px dashed var(--rubric-line);
+}
+
+.errata-mark {
+    flex-shrink: 0;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.errata-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+
+/* ===================================================================
+   SKELETON LOADING STATE
+   =================================================================== */
+.skeleton-block {
+    background: linear-gradient(90deg, var(--parchment-sunken) 25%, var(--border) 50%, var(--parchment-sunken) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.6s ease-in-out infinite;
+    border-radius: 4px;
+}
+@keyframes skeleton-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+mark {
+    background-color: var(--gold-soft);
+    color: var(--ink);
+    border-radius: 2px;
+    padding: 0 2px;
+    font-weight: 600;
+}

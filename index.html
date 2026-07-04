@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunnah Archive — A Critical Edition of Hadith</title>
+    <meta name="description" content="Browse hadith collections by chapter, search narrations, read scholarly commentary, and see common misquotes corrected against the source text.">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { darkMode: 'class' };</script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Amiri:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="min-h-screen flex flex-col transition-colors duration-150">
+
+    <a href="#hadithContainer" class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-2 focus:left-2 focus:bg-[var(--parchment)] focus:text-[var(--ink)] focus:px-3 focus:py-2 focus:rounded">
+        Skip to content
+    </a>
+
+    <!-- ============================================================
+         HEADER
+         ============================================================ -->
+    <header class="sticky top-0 z-40 border-b border-[var(--border)] bg-[var(--parchment-raised)]/95 backdrop-blur-sm">
+        <div class="rule-double"></div>
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 h-[68px] flex items-center justify-between">
+            <div class="flex items-baseline gap-3">
+                <span class="font-display font-semibold text-xl tracking-tight text-[var(--ink)]">Sunnah Archive</span>
+                <span class="hidden sm:inline-block font-mono-app text-[10px] tracking-[0.15em] uppercase text-[var(--verdigris)] border border-[var(--border)] rounded px-2 py-0.5">Critical Edition</span>
+            </div>
+
+            <button id="themeToggle" type="button" aria-label="Toggle light and dark theme"
+                    class="p-2 rounded-md border border-[var(--border)] hover:bg-[var(--parchment-sunken)] transition-colors">
+                <svg class="w-4 h-4 block dark:hidden" fill="none" stroke="var(--ink)" stroke-width="1.6" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+                </svg>
+                <svg class="w-4 h-4 hidden dark:block" fill="none" stroke="var(--gold)" stroke-width="1.6" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1.5M12 19.5V21M4.22 4.22l1.06 1.06M18.72 18.72l1.06 1.06M3 12h1.5M19.5 12H21M4.22 19.78l1.06-1.06M18.72 5.28l1.06-1.06"/>
+                    <circle cx="12" cy="12" r="4.5" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- ============================================================
+         MAIN
+         ============================================================ -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 py-10 flex-1 w-full flex flex-col">
+
+        <!-- Controls -->
+        <div class="mb-6 w-full max-w-2xl mx-auto">
+            <div class="relative rounded-lg border border-[var(--border)] bg-[var(--parchment-raised)] focus-within:border-[var(--border-strong)] transition-colors">
+                <label for="searchInput" class="sr-only">Search narrations</label>
+                <input type="text" id="searchInput" autocomplete="off"
+                       placeholder="Search narrations… (press / to focus)"
+                       class="w-full pl-4 pr-24 py-3 bg-transparent font-body text-[15px] focus:outline-none placeholder:text-[var(--ink-faint)] text-[var(--ink)]">
+                <div class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                    <button id="clearSearchBtn" type="button" aria-label="Clear search"
+                            class="hidden font-mono-app text-[var(--ink-faint)] hover:text-[var(--rubric)] text-sm font-bold px-1">✕</button>
+                    <span aria-hidden="true" class="font-mono-app text-[10px] text-[var(--ink-faint)] border border-[var(--border)] rounded px-1.5 py-0.5 select-none">/</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Breadcrumbs + counter -->
+        <div class="max-w-4xl mx-auto w-full mb-5">
+            <nav aria-label="Breadcrumb" id="breadcrumbs" class="flex items-center flex-wrap min-h-[18px] mb-2"></nav>
+            <p id="counterBadge" role="status" aria-live="polite"
+               class="font-mono-app text-[11px] tracking-wide text-[var(--ink-soft)] opacity-0 transition-opacity duration-150">
+                Initializing…
+            </p>
+        </div>
+
+        <!-- Results (collections, chapters, or hadith list depending on view) -->
+        <div id="hadithContainer" class="max-w-4xl mx-auto w-full flex-1"></div>
+
+        <!-- Load more -->
+        <div id="loadMoreContainer" class="hidden text-center mt-10">
+            <button type="button" data-role="load-more"
+                    class="font-mono-app text-[11px] tracking-[0.12em] uppercase px-5 py-2.5 rounded-md border border-[var(--border)] text-[var(--verdigris)] bg-[var(--parchment-raised)] hover:bg-[var(--parchment-sunken)] transition-colors active:scale-[0.98]">
+                Continue reading ↓
+            </button>
+        </div>
+    </main>
+
+    <footer class="border-t border-[var(--border)] py-6">
+        <p class="max-w-5xl mx-auto px-4 sm:px-6 font-mono-app text-[10px] tracking-wide text-[var(--ink-faint)]">
+            Corrections marked "Radd" are community-compiled — verify specific wording with a qualified scholar.
+        </p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
